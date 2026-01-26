@@ -12,25 +12,19 @@ module com.example.smarttask_frontend {
 
     // ===== Optional =====
     requires com.calendarfx.view;
-    requires java.desktop;
 
-    // ===== JavaFX Controllers (FXML reflection) =====
+    // ===== JavaFX (FXML reflection) =====
     opens com.example.smarttask_frontend.auth.controller to javafx.fxml;
     opens com.example.smarttask_frontend.tasks.controller to javafx.fxml;
     opens com.example.smarttask_frontend.dashboard to javafx.fxml;
     opens com.example.smarttask_frontend.calendar to javafx.fxml;
-    opens com.example.smarttask_frontend.subtasks.controller to javafx.fxml;
 
-    // ===== ENTITIES =====
-    opens com.example.smarttask_frontend.entity
-            to javafx.base, com.fasterxml.jackson.databind;
+    // ===== ENTITIES (🔥 VERY IMPORTANT) =====
+    opens com.example.smarttask_frontend.entity to javafx.base, com.fasterxml.jackson.databind;
 
     // ===== DTOs =====
-    opens com.example.smarttask_frontend.dto
-            to com.fasterxml.jackson.databind;
+    opens com.example.smarttask_frontend.dto to com.fasterxml.jackson.databind;
 
-    // ===== EXPORTS =====
+    // ===== Main =====
     exports com.example.smarttask_frontend;
-    exports com.example.smarttask_frontend.subtasks.controller;
-    exports com.example.smarttask_frontend.subtasks.service;
 }
