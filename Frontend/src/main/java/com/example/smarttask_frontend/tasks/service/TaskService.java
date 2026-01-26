@@ -114,6 +114,29 @@ public class TaskService {
         }
     }
 
+    public void updateTaskStatus(Long taskId, String status){
+        try {
+            String url = BASE_URL + taskId + "/status/" + status;
+    
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .PUT(HttpRequest.BodyPublishers.noBody())
+                    .build();
+    
+            HttpResponse<Void> response =
+                    httpClient.send(request, HttpResponse.BodyHandlers.discarding());
+    
+            if (response.statusCode() != 200 && response.statusCode() != 204) {
+                throw new RuntimeException(
+                        "Failed to update status. HTTP " + response.statusCode()
+                );
+            }
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 

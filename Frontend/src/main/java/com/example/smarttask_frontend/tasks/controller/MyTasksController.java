@@ -16,7 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-
+import javafx.scene.control.cell.ComboBoxTableCell;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -45,10 +45,19 @@ public class MyTasksController implements Initializable {
 
     private final TaskService taskService = new TaskService();
 
+    private final ObservableList<String> statusOptions =
+        FXCollections.observableArrayList(
+                "TODO",
+                "IN_PROGRESS",
+                "DONE"
+    );
+
+    
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupColumns();
         loadTasks();
+        taskTable.setEditable(true);
         taskTable.setOnMouseClicked(event -> {
             if (event.getClickCount() == 1) {
                 TablePosition<?, ?> pos =
@@ -69,7 +78,21 @@ public class MyTasksController implements Initializable {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         priorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
         dueDateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        statusColumn.setCellValueFactory(cellData ->
+            new SimpleStringProperty(cellData.getValue().getStatus())
+        );
+        
+        statusColumn.setCellFactory(ComboBoxTableCell.forTableColumn(statusOptions));
+        
+        statusColumn.setOnEditCommit(event -> {
+            Task task = event.getRowValue();
+            String newStatus = event.getNewValue();
+        
+            task.setStatus(newStatus); // UI update
+        
+            // OPTIONAL: persist to backend
+            taskService.updateTaskStatus(task.getId(), newStatus);
+        });
 
         // ✅ SIMPLE SUBTASK COUNT
         subTasksColumn.setCellValueFactory(cellData -> {
