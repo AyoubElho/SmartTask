@@ -58,4 +58,10 @@ public class TaskController {
     }
 
 
+    @PutMapping("/{taskId}/status/{status}")
+    public void updateStatus(@PathVariable Long taskId,@PathVariable Status status) {
+        taskService.updateStatus(taskId, status);
+    }
+
+
 }

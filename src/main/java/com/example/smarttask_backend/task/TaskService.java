@@ -87,4 +87,13 @@ public class TaskService {
         return taskDao.save(task);
     }
 
+    @Transactional
+    public void updateStatus(Long taskId, Status newStatus) {
+
+        Task task = taskDao.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        task.setStatus(newStatus);
+    }
+
 }
