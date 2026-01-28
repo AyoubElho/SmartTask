@@ -1,12 +1,15 @@
 package com.example.smarttask_backend.user;
 
 import com.example.smarttask_backend.task.Task;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -37,8 +40,13 @@ public class User {
     }
 
     // User → Tasks (one user owns many tasks)
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Task> tasks;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "sharedWith")
+    private Set<Task> sharedTasks;
 
     public User() {
         this.createdAt = LocalDateTime.now();

@@ -40,6 +40,9 @@ public class MyTasksController implements Initializable {
     @FXML
     private TableColumn<Task, String> statusColumn;
 
+    @FXML
+    private TableColumn<Task, Void> shareColumn;
+
     // 🔹 BUTTON COLUMN
     @FXML
     private TableColumn<Task, Void> subTasksColumn;
@@ -57,6 +60,7 @@ public class MyTasksController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupColumns();
         setupSubtaskButtonColumn();
+        setupShareButtonColumn();
         loadTasks();
         taskTable.setEditable(true);
     }
@@ -118,6 +122,31 @@ public class MyTasksController implements Initializable {
                     setGraphic(button);
                 } else {
                     setGraphic(null);
+                }
+            }
+        });
+    }
+    private void setupShareButtonColumn() {
+
+        shareColumn.setCellFactory(col -> new TableCell<>() {
+    
+            private final Button shareButton = new Button("Share");
+    
+            {
+                shareButton.setOnAction(event -> {
+                    Task task = getTableView().getItems().get(getIndex());
+                    openShareTaskDialog(task);
+                });
+            }
+    
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+    
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(shareButton);
                 }
             }
         });
@@ -201,6 +230,24 @@ public class MyTasksController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.show();
+    }
+
+    private void openShareTaskDialog(Task task) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/ShareTaskView.fxml"));
+            Parent root = loader.load();
+    
+            ShareTaskController controller = loader.getController();
+            controller.setTaskId(task.getId(), task.getTitle());
+    
+            Stage stage = new Stage();
+            stage.setTitle("Share Task - " + task.getTitle());
+            stage.setScene(new Scene(root, 350, 300));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("Unable to open Share Task window");
+        }
     }
 
 }

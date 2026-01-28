@@ -36,6 +36,15 @@ public class Task {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "task_shared",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> sharedWith;
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
