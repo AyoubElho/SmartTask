@@ -2,6 +2,7 @@ package com.example.smarttask_backend.task;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,12 @@ public class TaskController {
     @GetMapping("user/id/{userId}")
     public List<Task> getUserTasks(@PathVariable Long userId) {
         return taskService.getTasksByUser(userId);
+    }
+
+    @PostMapping("/{taskId}/share/{userId}")
+    public ResponseEntity<String> shareTask(@PathVariable Long taskId, @PathVariable Long userId) {
+        taskService.shareTask(taskId, userId);
+        return ResponseEntity.ok("Task shared successfully!");
     }
 
     @PostMapping("/save") // <--- This adds "/all", making the total: "/api/all"
@@ -63,5 +70,10 @@ public class TaskController {
         taskService.updateStatus(taskId, status);
     }
 
+
+    @GetMapping("/shared/{userId}")
+    public List<Task> getSharedTasks(@PathVariable Long userId) {
+        return taskService.getTasksSharedWithUser(userId);
+    }
 
 }

@@ -25,6 +25,14 @@ public class TaskService {
         return taskDao.findAll();
     }
 
+    public List<User> getUsers() {
+        return userDao.findAll();
+    }
+
+    public List<Task> getTasksSharedWithUser(Long userId) {
+        return taskDao.findTasksSharedWithUser(userId);
+    }
+
     public Task save(Task task) {
         task.setDueDate(task.getDueDate());
         return taskDao.save(task);
@@ -94,6 +102,25 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
         task.setStatus(newStatus);
+    }
+
+    public void shareTask(Long taskId, Long userId) {
+        Task task = taskDao.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        User user = userDao.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (task.getSharedWith() == null) {
+            task.setSharedWith(new HashSet<>());
+        }
+
+        // if (task.getSharedWith().contains(user)) {
+        //     return;
+        // }
+
+        task.getSharedWith().add(user);
+        taskDao.save(task);
     }
 
 }

@@ -23,7 +23,7 @@ public class UserController {
         return userService.register(user);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public List<User> findAllUsers() {
         return userService.findAllUsers();
     }
