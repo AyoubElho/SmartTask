@@ -43,6 +43,7 @@
                     <TableColumn fx:id="dueDateColumn" text="DUE DATE" prefWidth="150"/>
                     <TableColumn fx:id="statusColumn" text="STATUS" prefWidth="160"/>
                     <TableColumn fx:id="subTasksColumn" text="SUBTASKS" prefWidth="120"/>
+                    <TableColumn fx:id="shareColumn" text="Share"/>
                 </columns>
             </TableView>
         </VBox>

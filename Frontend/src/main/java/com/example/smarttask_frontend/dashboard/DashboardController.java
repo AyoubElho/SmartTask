@@ -6,6 +6,7 @@ import com.example.smarttask_frontend.tasks.service.TaskService;
 import com.example.smarttask_frontend.session.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -50,6 +51,20 @@ public class DashboardController implements Initializable {
     private TableColumn<Task, String> priorityColumn;
     @FXML
     private TableColumn<Task, String> dueDateColumn;
+    // @FXML
+    // private TableColumn<Task, String> ownerColumn;
+
+    @FXML
+    private TableColumn<Task, String> sharedTitleColumn;
+    @FXML
+    private TableColumn<Task, String> sharedPriorityColumn;
+    @FXML
+    private TableColumn<Task, String> sharedDueDateColumn;
+    @FXML
+    private TableColumn<Task, String> sharedStatusColumn;
+
+    @FXML
+    private TableView<Task> sharedTasksTable;
 
     private final TaskService taskService = new TaskService();
 
@@ -64,6 +79,11 @@ public class DashboardController implements Initializable {
         priorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
         dueDateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        sharedTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        sharedPriorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
+        sharedDueDateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
+        sharedStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         // === STYLE UPGRADE: Custom Cell Factory for Status Badges ===
         statusColumn.setCellFactory(column -> new TableCell<>() {
@@ -164,6 +184,9 @@ public class DashboardController implements Initializable {
             List<Task> tasks = taskService.getTasksByUser(user.getId());
             ObservableList<Task> observableTasks = FXCollections.observableArrayList(tasks);
             taskTable.setItems(observableTasks);
+
+            List<Task> sharedTasks = taskService.getSharedTasks(user.getId());
+            sharedTasksTable.setItems(FXCollections.observableArrayList(sharedTasks));
 
             // Calculate Stats Dynamically
             updateStatistics(tasks);
